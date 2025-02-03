@@ -36,7 +36,8 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
 # Arbeitsjournal
-| Datum | Aufwand (h) | Titel | Beschreibung |
-| --- | --- | --- | --- |
-| 03.02.2025 | ... ||
-| **Total Aufwand** | **...** ||
+
+| Datum             | Aufwand (h) | Titel | Beschreibung |
+| ----------------- | ----------- | ----- | ------------ |
+| 03.02.2025        | ...         |       |
+| **Total Aufwand** | **...**     |       |
