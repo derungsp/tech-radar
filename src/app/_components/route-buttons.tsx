@@ -6,6 +6,7 @@ import { PauseCircleIcon, UserIcon, UserPlusIcon } from '@heroicons/react/24/out
 import { useFormStatus } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import { signOut } from 'next-auth/react';
+import toast from 'react-hot-toast';
 
 export const RegisterPageButton = () => {
   return (
@@ -33,16 +34,19 @@ export const LogoutButton = () => {
   const router = useRouter();
 
   const logout = async () => {
-    try {
-      await signOut({
-        redirect: false,
-      });
-
-      router.push('/');
-      router.refresh();
-    } catch (error: any) {
-      console.error(error);
-    }
+    toast.promise(
+      (async () => {
+        await signOut({ redirect: false });
+        router.push('/');
+        router.refresh();
+        return 'Logged out successfully!';
+      })(),
+      {
+        loading: 'Logging out...',
+        success: 'Logged out successfully!',
+        error: 'Error while logging out',
+      },
+    );
   };
 
   return (
