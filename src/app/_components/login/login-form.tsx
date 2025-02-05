@@ -5,25 +5,14 @@ import { AtSymbolIcon, KeyIcon, ExclamationCircleIcon } from '@heroicons/react/2
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { Button } from '../button';
 import { signIn } from 'next-auth/react';
-import { Suspense, useState, useEffect } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
-
-function SearchParamsHandler({ setCallbackUrl }: { setCallbackUrl: (url: string | null) => void }) {
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl');
-
-  useEffect(() => {
-    setCallbackUrl(callbackUrl);
-  }, [callbackUrl, setCallbackUrl]);
-
-  return null;
-}
 
 export default function LoginForm() {
   const router = useRouter();
   const [error, setError] = useState('');
-  const [callbackUrl, setCallbackUrl] = useState<string | null>(null);
+  const [callbackUrl] = useState<string | null>(null);
 
   const authenticate = async (formData: FormData) => {
     const email = formData.get('email');
@@ -59,9 +48,9 @@ export default function LoginForm() {
     <form action={authenticate} className="w-full space-y-3 px-10">
       <h1 className="mb-3 text-2xl text-neutral-900">Please login</h1>
 
-      <Suspense fallback={<div>Loading search parameter...</div>}>
+      {/* <Suspense fallback={<div>Loading search parameter...</div>}>
         <SearchParamsHandler setCallbackUrl={setCallbackUrl} />
-      </Suspense>
+      </Suspense> */}
 
       <div className="w-full">
         <div>

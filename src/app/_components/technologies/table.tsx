@@ -1,5 +1,3 @@
-// 'use client';
-
 import { Technology } from '@prisma/client';
 import Link from 'next/link';
 
@@ -13,7 +11,7 @@ export default function Table({
   return (
     <div className="overflow-x-auto p-4">
       <table className="w-full border-collapse rounded-lg border border-gray-300 shadow-lg">
-        <caption className="caption-top rounded-t-lg bg-gray-100 p-3 text-lg font-semibold text-gray-700">
+        <caption className="caption-top rounded-t-lg p-3 text-lg font-semibold text-gray-700">
           {title}
         </caption>
         <thead>
@@ -30,7 +28,7 @@ export default function Table({
           {technologies.map((item) => (
             <tr
               key={item.id}
-              className="border border-gray-300 transition-colors hover:bg-gray-100"
+              className="border border-gray-300 transition-colors hover:bg-gray-300"
             >
               <td className="px-4 py-2 text-center">{item.id}</td>
               <td className="px-4 py-2">{item.name}</td>
@@ -47,7 +45,7 @@ export default function Table({
               </td>
               <td className="px-4 py-2 text-center">
                 <Link
-                  href={item.id}
+                  href={'technologies/' + item.id + '/edit'}
                   className="rounded bg-blue-500 px-3 py-1 text-white transition hover:bg-blue-600"
                 >
                   edit

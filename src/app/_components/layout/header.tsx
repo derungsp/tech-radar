@@ -5,8 +5,12 @@ import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { cn } from '@/app/lib/cn';
+import { LogoutLink } from '../login-link';
+import { useAuth } from '@/context/auth-context';
 
 export default function Header() {
+  const { user } = useAuth();
+
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -18,25 +22,40 @@ export default function Header() {
   }, [isOpen]);
 
   return (
-    <header className="fixed z-50 flex w-full flex-col bg-white shadow-sm">
+    <header className="z-50 flex w-full flex-col bg-white shadow-sm">
       <div className="mx-auto flex h-20 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link href="/" className="relative flex h-14 w-64 items-center justify-center">
           <h1 className="text-2xl">TechRadar</h1>
         </Link>
 
         <nav className="hidden gap-8 lg:flex lg:justify-evenly">
-          {links.map(({ href, label }) => (
-            <Link
-              key={href}
-              href={href}
-              className={cn(
-                'hover:text-primary',
-                pathname === href ? 'text-primary font-semibold' : 'text-gray-900',
-              )}
-            >
-              {label}
-            </Link>
-          ))}
+          <Link
+            href={'/'}
+            className={cn(
+              'hover:text-primary',
+              pathname === '/' ? 'text-primary font-semibold' : 'text-gray-900',
+            )}
+          >
+            Home
+          </Link>
+          <Link
+            href={'/technologies'}
+            className={cn(
+              'hover:text-primary',
+              pathname === '/technologies' ? 'text-primary font-semibold' : 'text-gray-900',
+            )}
+          >
+            Technologies
+          </Link>
+
+          {user ? (
+            <>
+              <p>Welcome {user ? user.firstname + ' ' + user.lastname : ''}</p>
+              <LogoutLink />
+            </>
+          ) : (
+            <></>
+          )}
         </nav>
 
         <MobileMenu isOpen={isOpen} setIsOpen={setIsOpen} />
@@ -78,22 +97,34 @@ const MobileMenu = ({
           }
         >
           <div className="flex flex-col items-center space-y-20 text-xl lg:hidden">
-            {links.map(({ href, label }) => (
-              <Link
-                key={href}
-                onClick={() => {
-                  setIsOpen(false);
-                  router.push(href);
-                }}
-                href={href}
-                className={cn(
-                  'hover:text-primary',
-                  pathname === href ? 'text-primary font-semibold' : 'text-gray-900',
-                )}
-              >
-                {label}
-              </Link>
-            ))}
+            <Link
+              onClick={() => {
+                setIsOpen(false);
+                router.push('/');
+              }}
+              href={'/'}
+              className={cn(
+                'hover:text-primary',
+                pathname === '/' ? 'text-primary font-semibold' : 'text-gray-900',
+              )}
+            >
+              Home
+            </Link>
+            <Link
+              onClick={() => {
+                setIsOpen(false);
+                router.push('/technologies');
+              }}
+              href={'/technologies'}
+              className={cn(
+                'hover:text-primary',
+                pathname === '/technologies' ? 'text-primary font-semibold' : 'text-gray-900',
+              )}
+            >
+              Technologies
+            </Link>
+
+            <LogoutLink />
           </div>
         </motion.nav>
       )}
@@ -167,9 +198,3 @@ const HamburgerButton = ({
     </button>
   );
 };
-
-export const links = [
-  { href: '/', label: 'Home' },
-  { href: '/technologies', label: 'Technologies' },
-  // { href: '/users', label: 'Users' },
-];

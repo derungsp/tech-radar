@@ -51,7 +51,6 @@ export async function createTechnology(prevState: State, formData: FormData) {
   });
 
   if (!validatedFields.success) {
-    console.log(validatedFields.error.flatten().fieldErrors);
     return {
       errors: validatedFields.error.flatten().fieldErrors,
       message: 'Missing Fields. Failed to create technology.',
@@ -93,7 +92,6 @@ export async function createTechnologyDraft(prevState: State, formData: FormData
   });
 
   if (!validatedFields.success) {
-    console.log(validatedFields.error.flatten().fieldErrors);
     return {
       errors: validatedFields.error.flatten().fieldErrors,
       message: 'Missing Fields. Failed to create technology draft.',
@@ -135,7 +133,6 @@ export async function updateTechnology(id: string, prevState: State, formData: F
   });
 
   if (!validatedFields.success) {
-    console.log(validatedFields.error.flatten().fieldErrors);
     return {
       errors: validatedFields.error.flatten().fieldErrors,
       message: 'Missing Fields. Failed to update technology.',
@@ -175,7 +172,6 @@ export async function updateTechnologyDraft(id: string, prevState: State, formDa
   });
 
   if (!validatedFields.success) {
-    console.log(validatedFields.error.flatten().fieldErrors);
     return {
       errors: validatedFields.error.flatten().fieldErrors,
       message: 'Missing Fields. Failed to update technology draft.',
