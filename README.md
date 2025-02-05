@@ -14,7 +14,7 @@ Als Arbeit wird das präsentierte Projekt **"Technologie-Radar"** umgesetzt. Kei
 
 ## Technologie-Stack
 
-Anstatt Angular wird dieses Projekt mit Next.js (React) mit App Router umgesetzt. Für die Persistenz wird MongoDb mit Prisma verwendet. Weiter werden diverse Libraries für Design, Validation etc. verwendet (Tailwindcss, zod...).
+Anstatt Angular wird dieses Projekt mit **Next.js (React, Typescript)** mit App Router umgesetzt. Für die Persistenz wird **MongoDb** mit Prisma verwendet. Weiter werden diverse Libraries für Design, Validation etc. verwendet (Tailwindcss, zod, d3, framer motion, heroicons...).
 
 ## Ggf. angedachte Abgrenzungen / Änderungen
 
@@ -33,6 +33,9 @@ In der folgenden Tabelle werden die Anforderungen kurz aufgelistet. Die detailli
 | 5   | Technologie-Einordnung ändern                | [User Story 5](https://github.com/derungsp/tech-radar/issues/5) |
 | 6   | Technologien anzeigen                        | [User Story 6](https://github.com/derungsp/tech-radar/issues/6) |
 | 7   | Anmelden am Technologie-Radar-Viewer         | [User Story 7](https://github.com/derungsp/tech-radar/issues/7) |
+
+# Softwareartefakte
+Alle Softwareartefakte sind mit Historie in diesem [GitHub Repository](https://github.com/derungsp/tech-radar/) zu finden.
 
 # Fazit & Reflexion
 
