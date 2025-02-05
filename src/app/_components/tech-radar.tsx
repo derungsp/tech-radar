@@ -2,42 +2,28 @@
 
 import { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
-import { Technology } from '@prisma/client';
+import { Ring, Technology, TechnologyCategory } from '@prisma/client';
 
-const categories = ['Languages', 'Infrastructure', 'Data Management', 'Datastores'] as const;
-type Category = (typeof categories)[number];
-
-const categoryAngles: Record<Category, [number, number]> = {
-  Languages: [0, Math.PI / 2],
-  Infrastructure: [Math.PI / 2, Math.PI],
-  'Data Management': [Math.PI, 1.5 * Math.PI],
-  Datastores: [1.5 * Math.PI, 2 * Math.PI],
+const categoryAngles: Record<TechnologyCategory, [number, number]> = {
+  PLATFORMS: [Math.PI / 2, Math.PI],
+  TOOLS: [Math.PI, 1.5 * Math.PI],
+  LANGUAGES: [1.5 * Math.PI, 2 * Math.PI],
+  TECHNIQUES: [0, Math.PI / 2],
 };
 
-const rings = ['Adopt', 'Trial', 'Assess', 'Hold'];
-const colors = ['#5ba300', '#009eb0', '#c7ba00', '#e09b96'];
-
-const data = [
-  { name: 'Next.js', category: 'Languages', value: 90 },
-  { name: 'TypeScript', category: 'Languages', value: 85 },
-  { name: 'GraphQL', category: 'Data Management', value: 70 },
-  { name: 'Tailwind', category: 'Languages', value: 65 },
-  { name: 'Docker', category: 'Infrastructure', value: 40 },
-  { name: 'Kubernetes', category: 'Infrastructure', value: 30 },
-  { name: 'Redis', category: 'Datastores', value: 55 },
-  { name: 'PostgreSQL', category: 'Datastores', value: 75 },
-  { name: 'MongoDB', category: 'Data Management', value: 20 },
-];
+const categories = Object.values(TechnologyCategory);
+const rings = Object.values(Ring);
+const colors = ['#009eb0', '#5ba300', '#c7ba00', '#e09b96'];
 
 export default function TechRadar({ technologies }: { technologies: Technology[] }) {
   const ref = useRef<SVGSVGElement>(null);
-
-  technologies?.forEach((c) => console.log(c.name));
 
   useEffect(() => {
     const width = 600;
     const height = 600;
     const radiusScale = d3.scaleLinear().domain([0, 100]).range([0, 250]);
+
+    d3.select(ref.current).selectAll('*').remove();
 
     const svg = d3
       .select(ref.current)
@@ -51,7 +37,7 @@ export default function TechRadar({ technologies }: { technologies: Technology[]
         .append('circle')
         .attr('r', ((i + 1) * 250) / rings.length)
         .attr('fill', 'none')
-        .attr('stroke', colors[i])
+        .attr('stroke', '#bbb')
         .attr('stroke-width', 2);
     });
 
@@ -71,24 +57,46 @@ export default function TechRadar({ technologies }: { technologies: Technology[]
       .attr('y2', 250)
       .attr('stroke', '#bbb');
 
-    data.forEach((point) => {
-      const [angleMin, angleMax] = categoryAngles[point.category as keyof typeof categoryAngles];
+    technologies.forEach((technology) => {
+      const [angleMin, angleMax] =
+        categoryAngles[technology.category as keyof typeof categoryAngles];
       const angle = d3.randomUniform(angleMin, angleMax)();
-      const r = radiusScale(point.value);
+
+      let ringValue = 0;
+
+      if (technology.ring === Ring.ADOPT) {
+        ringValue = getRandomInteger(5, 20);
+      } else if (technology.ring === Ring.TRIAL) {
+        ringValue = getRandomInteger(35, 45);
+      } else if (technology.ring === Ring.ASSESS) {
+        ringValue = getRandomInteger(55, 65);
+      } else if (technology.ring === Ring.HOLD) {
+        ringValue = getRandomInteger(75, 95);
+      }
+
+      const r = radiusScale(ringValue);
       const x = Math.cos(angle) * r;
       const y = Math.sin(angle) * r;
 
-      svg.append('circle').attr('cx', x).attr('cy', y).attr('r', 6).attr('fill', '#333');
+      if (technology.ring === Ring.ADOPT) {
+        svg.append('circle').attr('cx', x).attr('cy', y).attr('r', 6).attr('fill', colors[0]);
+      } else if (technology.ring === Ring.TRIAL) {
+        svg.append('circle').attr('cx', x).attr('cy', y).attr('r', 6).attr('fill', colors[1]);
+      } else if (technology.ring === Ring.ASSESS) {
+        svg.append('circle').attr('cx', x).attr('cy', y).attr('r', 6).attr('fill', colors[2]);
+      } else if (technology.ring === Ring.HOLD) {
+        svg.append('circle').attr('cx', x).attr('cy', y).attr('r', 6).attr('fill', colors[3]);
+      }
 
       svg
         .append('text')
         .attr('x', x + 10)
         .attr('y', y)
-        .text(point.name)
+        .text(technology.name)
         .attr('font-size', '12px')
         .attr('fill', '#333');
     });
-  }, []);
+  }, [technologies]);
 
   return (
     <div className="flex flex-col items-center">
@@ -112,4 +120,8 @@ export default function TechRadar({ technologies }: { technologies: Technology[]
       </div>
     </div>
   );
+}
+
+function getRandomInteger(min: number, max: number): number {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }

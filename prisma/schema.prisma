@@ -22,8 +22,8 @@ enum TechnologyCategory {
 
 enum Ring {
   ADOPT
-  ASSESS
   TRIAL
+  ASSESS
   HOLD
 }
 
