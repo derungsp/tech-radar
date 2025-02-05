@@ -4,7 +4,7 @@ import { db } from '@/utils/db';
 import z from 'zod';
 import bcrypt from 'bcrypt';
 
-const FormSchema = z.object({
+const UserSchema = z.object({
   id: z.string(),
   email: z.string().email({
     message: 'Invalid email address.',
@@ -27,7 +27,7 @@ const FormSchema = z.object({
   }),
 });
 
-const Register = FormSchema.omit({
+const Register = UserSchema.omit({
   id: true,
 });
 

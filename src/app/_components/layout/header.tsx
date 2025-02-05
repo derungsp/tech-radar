@@ -168,4 +168,8 @@ const HamburgerButton = ({
   );
 };
 
-export const links = [{ href: '/', label: 'Home' }];
+export const links = [
+  { href: '/', label: 'Home' },
+  { href: '/technologies', label: 'Technologies' },
+  // { href: '/users', label: 'Users' },
+];

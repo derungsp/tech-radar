@@ -35,7 +35,10 @@ In der folgenden Tabelle werden die Anforderungen kurz aufgelistet. Die detailli
 | 7   | Anmelden am Technologie-Radar-Viewer         | [User Story 7](https://github.com/derungsp/tech-radar/issues/7) |
 
 # Softwareartefakte
+
 Alle Softwareartefakte sind mit Historie in diesem [GitHub Repository](https://github.com/derungsp/tech-radar/) zu finden.
+
+# User Credentials
 
 # Fazit & Reflexion
 
@@ -43,11 +46,11 @@ hier kommt das fazit und die reflexion
 
 # Arbeitsjournal
 
-| Datum             | Aufwand (h) | Titel                                                   | Beschreibung                                                                                                                                                                                                                                                                                                                 |
-| ----------------- | ----------- | ------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 03.02.2025        | 9           | Initialer Aufbau und Authentifikation                   | Next.js 15 (App Router) Projekt initialisiert und mittels NextAuth & MongoDb eine erste Authentifikation für User inkl. Rollen entwickelt. Für die serverseitige Validation wurde zod und als ORM wurde prisma verwendet. Als Entwicklungstools wurden ESLint / Prettier und husky ins Projekt eingebunden und konfiguriert. |
-| 04.02.2025        | 8           | Login / Register Seiten, Navbar, RadarChart und Hosting | Es wurden eine Login und Register Seite sowie eine erste Navbar mithilfe von Tailwindcss, framer motion und heroicons entwickelt. Deployment auf Vercel wurde eingerichtet. Erste Versuche eines RadarCharts wurden gemacht.                                                                                                 |
-| 05.02.2025        | ...         | ...                                                     | ...                                                                                                                                                                                                                                                                                                                          |
+| Datum             | Aufwand (h) | Titel                                                   | Beschreibung                                                                                                                                                                                                                                                                                                                                                 |
+| ----------------- | ----------- | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 03.02.2025        | 9           | Initialer Aufbau und Authentifikation                   | Next.js 15 (App Router) Projekt initialisiert und mittels NextAuth & MongoDb eine erste Authentifikation für User inkl. Rollen entwickelt. Für die serverseitige Validation wurde zod und als ORM wurde prisma verwendet. Als Entwicklungstools wurden ESLint / Prettier und husky ins Projekt eingebunden und konfiguriert.                                 |
+| 04.02.2025        | 8           | Login / Register Seiten, Navbar, RadarChart und Hosting | Es wurden eine Login und Register Seite sowie eine erste Navbar mithilfe von Tailwindcss, framer motion und heroicons entwickelt. Deployment auf Vercel wurde eingerichtet. Erste Versuche eines RadarCharts wurden gemacht.                                                                                                                                 |
+| 05.02.2025        | 6           | Tech-Radar, Technology-Schema, Create-Funktionalität    | Eine erste Version der Tech-Radars wurde entwickelt (Testdaten). Technologien werden auf der Übersichtsseite rollenbasiert angezeigt. Ausserdem können Technologien auf einer seperaten Seite erstellt und abgespeichert werden. Es wurde ein spezieller Select für die Enum's für den Ring und die Kategorie entwickelt. Dazu wurde headlessui eingebunden. |
 | **Total Aufwand** | **...**     |                                                         |
 
 # Getting Started
