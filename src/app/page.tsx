@@ -1,8 +1,8 @@
 import TechRadar from './_components/tech-radar';
-import { fetchAllTechnologies } from './lib/data/technology';
+import { fetchAllPublicTechnologies } from './lib/data/technology';
 
 export default async function Home() {
-  const technologies = await fetchAllTechnologies();
+  const technologies = await fetchAllPublicTechnologies();
 
   return (
     <main>

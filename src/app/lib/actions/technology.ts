@@ -6,40 +6,43 @@ import { redirect } from 'next/navigation';
 import { db } from '@/utils/db';
 import { Ring, TechnologyCategory } from '@prisma/client';
 
+const booleanFromString = z.preprocess((val) => val === 'true', z.boolean());
+
 const TechnologySchema = z.object({
   id: z.string(),
   name: z.string().nonempty(),
   publishedAt: z.date(),
   techDescription: z.string().nonempty(),
-  ringDescription: z.string().nonempty(),
-  ring: z.nativeEnum(Ring),
-  category: z.nativeEnum(TechnologyCategory),
+  ringDescription: z.string().nullable().optional(),
+  ring: z.preprocess((val) => (val === '' ? null : val), z.nativeEnum(Ring).nullable().optional()),
+  category: z.preprocess((val) => (val === '' ? null : val), z.nativeEnum(TechnologyCategory)),
+  isDraft: booleanFromString,
 });
 
-const CreateTechnology = TechnologySchema.omit({
+const ConditionalTechnologySchema = TechnologySchema.omit({
   id: true,
-});
+}).superRefine((data, ctx) => {
+  if (!data.isDraft) {
+    if (!data.ring) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['ring'],
+        message: 'Ring is required for published technologies.',
+      });
+    }
 
-const CreateTechnologyDraft = TechnologySchema.omit({
-  id: true,
-}).extend({
-  ring: z.nativeEnum(Ring).nullable(),
-  ringDescription: z.string().nullable(),
-});
-
-const UpdateTechnology = TechnologySchema.omit({
-  id: true,
-});
-
-const UpdateTechnologyDraft = TechnologySchema.omit({
-  id: true,
-}).extend({
-  ring: z.nativeEnum(Ring).nullable(),
-  ringDescription: z.string().nullable(),
+    if (!data.ringDescription || data.ringDescription.trim() === '') {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['ringDescription'],
+        message: 'Ring description is required for published technologies.',
+      });
+    }
+  }
 });
 
 export async function createTechnology(prevState: State, formData: FormData) {
-  const validatedFields = CreateTechnology.safeParse({
+  const validatedFields = ConditionalTechnologySchema.safeParse({
     name: formData.get('name'),
     techDescription: formData.get('techDescription'),
     ringDescription: formData.get('ringDescription'),
@@ -48,6 +51,7 @@ export async function createTechnology(prevState: State, formData: FormData) {
     publishedAt: formData.get('publishedAt')
       ? new Date(formData.get('publishedAt') as string)
       : null,
+    isDraft: formData.get('isDraft'),
   });
 
   if (!validatedFields.success) {
@@ -57,8 +61,13 @@ export async function createTechnology(prevState: State, formData: FormData) {
     };
   }
 
-  const { name, techDescription, ringDescription, ring, category, publishedAt } =
-    validatedFields.data;
+  const { name, techDescription, ringDescription, ring, category, isDraft } = validatedFields.data;
+
+  let { publishedAt } = validatedFields.data;
+
+  if (!isDraft && !publishedAt) {
+    publishedAt = new Date();
+  }
 
   try {
     await db.technology.create({
@@ -69,6 +78,7 @@ export async function createTechnology(prevState: State, formData: FormData) {
         ring,
         category,
         publishedAt,
+        isDraft,
       },
     });
   } catch {
@@ -79,49 +89,8 @@ export async function createTechnology(prevState: State, formData: FormData) {
   redirect('/technologies');
 }
 
-export async function createTechnologyDraft(prevState: State, formData: FormData) {
-  const validatedFields = CreateTechnologyDraft.safeParse({
-    name: formData.get('name'),
-    techDescription: formData.get('techDescription'),
-    ringDescription: formData.get('ringDescription'),
-    ring: formData.get('ring'),
-    category: formData.get('category'),
-    publishedAt: formData.get('publishedAt')
-      ? new Date(formData.get('publishedAt') as string)
-      : null,
-  });
-
-  if (!validatedFields.success) {
-    return {
-      errors: validatedFields.error.flatten().fieldErrors,
-      message: 'Missing Fields. Failed to create technology draft.',
-    };
-  }
-
-  const { name, techDescription, ringDescription, ring, category, publishedAt } =
-    validatedFields.data;
-
-  try {
-    await db.technology.create({
-      data: {
-        name,
-        techDescription,
-        ringDescription,
-        ring,
-        category,
-        publishedAt,
-      },
-    });
-  } catch {
-    return { message: 'Database Error: Failed to create technology draft.' };
-  }
-
-  revalidatePath('/technologies');
-  redirect('/technologies');
-}
-
 export async function updateTechnology(id: string, prevState: State, formData: FormData) {
-  const validatedFields = UpdateTechnology.safeParse({
+  const validatedFields = ConditionalTechnologySchema.safeParse({
     name: formData.get('name'),
     techDescription: formData.get('techDescription'),
     ringDescription: formData.get('ringDescription'),
@@ -130,6 +99,7 @@ export async function updateTechnology(id: string, prevState: State, formData: F
     publishedAt: formData.get('publishedAt')
       ? new Date(formData.get('publishedAt') as string)
       : null,
+    isDraft: formData.get('isDraft'),
   });
 
   if (!validatedFields.success) {
@@ -139,7 +109,7 @@ export async function updateTechnology(id: string, prevState: State, formData: F
     };
   }
 
-  const { name, techDescription, ringDescription, ring, category, publishedAt } =
+  const { name, techDescription, ringDescription, ring, category, publishedAt, isDraft } =
     validatedFields.data;
 
   try {
@@ -152,47 +122,11 @@ export async function updateTechnology(id: string, prevState: State, formData: F
         ring,
         category,
         publishedAt,
+        isDraft,
       },
     });
   } catch {
     return { message: 'Database Error: Failed to update technology.' };
-  }
-
-  revalidatePath('/technologies');
-  redirect('/technologies');
-}
-
-export async function updateTechnologyDraft(id: string, prevState: State, formData: FormData) {
-  const validatedFields = UpdateTechnologyDraft.safeParse({
-    name: formData.get('name'),
-    techDescription: formData.get('techDescription'),
-    ringDescription: formData.get('ringDescription'),
-    ring: formData.get('ring'),
-    category: formData.get('category'),
-  });
-
-  if (!validatedFields.success) {
-    return {
-      errors: validatedFields.error.flatten().fieldErrors,
-      message: 'Missing Fields. Failed to update technology draft.',
-    };
-  }
-
-  const { name, techDescription, ringDescription, ring, category } = validatedFields.data;
-
-  try {
-    await db.technology.update({
-      where: { id },
-      data: {
-        name,
-        techDescription,
-        ringDescription,
-        ring,
-        category,
-      },
-    });
-  } catch {
-    return { message: 'Database Error: Failed to update technology draft.' };
   }
 
   revalidatePath('/technologies');

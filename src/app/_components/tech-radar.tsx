@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import { Ring, Technology, TechnologyCategory } from '@prisma/client';
 
@@ -11,31 +11,44 @@ const categoryAngles: Record<TechnologyCategory, [number, number]> = {
   TECHNIQUES: [0, Math.PI / 2],
 };
 
-const categories = Object.values(TechnologyCategory);
 const rings = Object.values(Ring);
 const colors = ['#009eb0', '#5ba300', '#c7ba00', '#e09b96'];
 
 export default function TechRadar({ technologies }: { technologies: Technology[] }) {
   const ref = useRef<SVGSVGElement>(null);
 
+  const [size, setSize] = useState(800);
+
   useEffect(() => {
-    const width = 600;
-    const height = 600;
-    const radiusScale = d3.scaleLinear().domain([0, 100]).range([0, 250]);
+    const handleResize = () => {
+      setSize(Math.min(window.innerWidth * 0.9, 1000));
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    const radius = size / 2;
+    const radiusScale = d3
+      .scaleLinear()
+      .domain([0, 100])
+      .range([0, radius - 80]);
 
     d3.select(ref.current).selectAll('*').remove();
 
     const svg = d3
       .select(ref.current)
-      .attr('width', width)
-      .attr('height', height)
+      .attr('viewBox', `0 0 ${size} ${size}`)
+      .attr('preserveAspectRatio', 'xMidYMid meet')
       .append('g')
-      .attr('transform', `translate(${width / 2}, ${height / 2})`);
+      .attr('transform', `translate(${radius}, ${radius})`);
 
     rings.forEach((_, i) => {
       svg
         .append('circle')
-        .attr('r', ((i + 1) * 250) / rings.length)
+        .attr('r', ((i + 1) * (radius - 80)) / rings.length)
         .attr('fill', 'none')
         .attr('stroke', '#bbb')
         .attr('stroke-width', 2);
@@ -43,18 +56,17 @@ export default function TechRadar({ technologies }: { technologies: Technology[]
 
     svg
       .append('line')
-      .attr('x1', -250)
+      .attr('x1', -radius)
       .attr('y1', 0)
-      .attr('x2', 250)
+      .attr('x2', radius)
       .attr('y2', 0)
       .attr('stroke', '#bbb');
-
     svg
       .append('line')
       .attr('x1', 0)
-      .attr('y1', -250)
+      .attr('y1', -radius)
       .attr('x2', 0)
-      .attr('y2', 250)
+      .attr('y2', radius)
       .attr('stroke', '#bbb');
 
     technologies.forEach((technology) => {
@@ -96,25 +108,33 @@ export default function TechRadar({ technologies }: { technologies: Technology[]
         .attr('font-size', '12px')
         .attr('fill', '#333');
     });
-  }, [technologies]);
+  }, [technologies, size]);
 
   return (
     <div className="flex flex-col items-center">
-      <svg ref={ref}></svg>
+      <div className="absolute left-5 top-28">
+        <h1>TOOLS</h1>
+        {renderTechnologyList('TOOLS', technologies)}
+      </div>
+      <div className="absolute right-5 top-28">
+        <h1>LANGUAGES</h1>
+        {renderTechnologyList('LANGUAGES', technologies)}
+      </div>
+      <div className="absolute bottom-5 left-5">
+        <h1>PLATFORMS</h1>
+        {renderTechnologyList('PLATFORMS', technologies)}
+      </div>
+      <div className="absolute bottom-5 right-5">
+        <h1>TECHNIQUES</h1>
+        {renderTechnologyList('TECHNIQUES', technologies)}
+      </div>
+      <svg className="lg:max-w-[90%] xl:max-w-[80%] 2xl:max-w-[1200px]" ref={ref}></svg>
 
-      <div className="mt-6 flex flex-wrap space-x-6">
+      <div className="flex flex-wrap space-x-6">
         {rings.map((ring, i) => (
           <div key={ring} className="flex items-center space-x-2">
             <div className="h-4 w-4 rounded-full" style={{ backgroundColor: colors[i] }}></div>
             <span className="text-sm font-medium">{ring}</span>
-          </div>
-        ))}
-      </div>
-
-      <div className="mt-4 flex flex-wrap space-x-6">
-        {categories.map((cat) => (
-          <div key={cat} className="flex items-center space-x-2">
-            <span className="text-sm font-semibold">{cat}</span>
           </div>
         ))}
       </div>
@@ -124,4 +144,47 @@ export default function TechRadar({ technologies }: { technologies: Technology[]
 
 function getRandomInteger(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function renderTechnologyList(category: TechnologyCategory, technologies: Technology[]) {
+  const filteredTechnologies = technologies.filter((tech) => tech.category === category);
+
+  if (filteredTechnologies.length === 0) {
+    return <p className="text-sm text-gray-500">Keine Technologien</p>;
+  }
+
+  const groupedByRing: Record<Ring, Technology[]> = {
+    ADOPT: [],
+    TRIAL: [],
+    ASSESS: [],
+    HOLD: [],
+  };
+
+  filteredTechnologies.forEach((tech) => {
+    if (tech.ring) {
+      groupedByRing[tech.ring].push(tech);
+    }
+  });
+
+  return (
+    <div className="mt-2 space-y-3">
+      {Object.entries(groupedByRing).map(
+        ([ring, techs], index) =>
+          techs.length > 0 && (
+            <div key={ring}>
+              <h2 className="text-sm font-semibold text-gray-700">
+                {index + 1}. {ring}
+              </h2>
+              <ul className="list-inside list-decimal text-sm text-gray-600">
+                {techs.map((tech, i) => (
+                  <li key={tech.id}>
+                    {i + 1}. {tech.name}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ),
+      )}
+    </div>
+  );
 }

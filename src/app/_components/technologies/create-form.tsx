@@ -24,6 +24,7 @@ export default function CreateForm() {
   const [currentDateTime, setCurrentDateTime] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<TechnologyCategory | null>(null);
   const [selectedRing, setSelectedRing] = useState<Ring | null>(null);
+  const { pending } = useFormStatus();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -32,6 +33,7 @@ export default function CreateForm() {
     ring: '',
     ringDescription: '',
     publishedAt: '',
+    isDraft: false,
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -177,6 +179,15 @@ export default function CreateForm() {
           )}
         </div>
       </div>
+
+      <input
+        type="hidden"
+        className="peer block rounded-md border border-neutral-200 p-2 text-neutral-950 outline-2"
+        id="isDraft"
+        name="isDraft"
+        value={formData.isDraft ? 'true' : 'false'}
+      />
+
       <div className="flex w-full items-center justify-between gap-2">
         <div aria-live="polite" className="flex h-8 items-center gap-1 text-sm text-red-500">
           {state.message && (
@@ -188,7 +199,29 @@ export default function CreateForm() {
         </div>
 
         <div className="flex items-center gap-2">
-          <CreateTechnologyButton />
+          <Button
+            aria-disabled={pending}
+            className={
+              'border bg-neutral-900 px-4 py-2 text-white shadow-sm hover:bg-neutral-700 focus-visible:outline-neutral-500 active:bg-neutral-600'
+            }
+            onClick={() => {
+              setFormData({ ...formData, isDraft: false });
+            }}
+          >
+            Create Technology
+          </Button>
+
+          <Button
+            aria-disabled={pending}
+            className={
+              'border bg-gray-500 px-4 py-2 text-white shadow-sm hover:bg-gray-700 focus-visible:outline-neutral-500 active:bg-neutral-600'
+            }
+            onClick={() => {
+              setFormData({ ...formData, isDraft: true });
+            }}
+          >
+            Save as Draft
+          </Button>
 
           <Link
             href={`/technologies`}
@@ -201,19 +234,6 @@ export default function CreateForm() {
     </form>
   );
 }
-
-const CreateTechnologyButton = () => {
-  const { pending } = useFormStatus();
-
-  return (
-    <Button
-      aria-disabled={pending}
-      className="border bg-neutral-900 px-4 py-2 text-white shadow-sm hover:bg-neutral-700 focus-visible:outline-neutral-500 active:bg-neutral-600"
-    >
-      Create technology
-    </Button>
-  );
-};
 
 function CategorySelect({
   selectedCategory,

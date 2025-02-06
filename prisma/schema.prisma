@@ -49,6 +49,7 @@ model Technology {
   name            String
   techDescription String
   ringDescription String?
+  isDraft         Boolean   @default(false)
 
   category TechnologyCategory
   ring     Ring?

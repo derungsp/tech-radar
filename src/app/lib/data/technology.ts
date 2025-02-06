@@ -5,7 +5,16 @@ export async function fetchAllTechnologies() {
     return await db.technology.findMany();
   } catch (error) {
     console.error('Database Error:', error);
-    throw new Error('Failed to fetch technologies.');
+    throw new Error('Failed to fetch all technologies.');
+  }
+}
+
+export async function fetchAllPublicTechnologies() {
+  try {
+    return await db.technology.findMany({ where: { isDraft: false } });
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch public technologies.');
   }
 }
 

@@ -41,10 +41,10 @@ export default function Table({
               <td className="px-4 py-2 text-center">
                 <span
                   className={`rounded-full px-2 py-1 text-sm text-white ${
-                    technology ? 'bg-green-500' : 'bg-red-500'
+                    !technology.isDraft ? 'bg-green-500' : 'bg-red-500'
                   }`}
                 >
-                  public
+                  {!technology.isDraft ? 'public' : 'draft'}
                 </span>
               </td>
               <td className="flex gap-x-3 px-4 py-2 text-center">

@@ -29,6 +29,7 @@ export default function EditForm({ technology }: { technology: Technology }) {
   const initialState = { message: '', errors: {} };
   const updateTechnologyById = updateTechnology.bind(null, technology.id);
   const [state, dispatch] = useActionState(updateTechnologyById, initialState);
+  const { pending } = useFormStatus();
 
   const [currentDateTime, setCurrentDateTime] = useState(
     formatDateForInput(technology.publishedAt),
@@ -37,9 +38,18 @@ export default function EditForm({ technology }: { technology: Technology }) {
     technology.category,
   );
   const [selectedRing, setSelectedRing] = useState<Ring | null>(technology.ring);
+  const [isDraft, setIsDraft] = useState(technology.isDraft);
+
+  const handleSubmit = (formData: FormData) => {
+    formData.set('isDraft', isDraft.toString());
+    dispatch(formData);
+  };
 
   return (
-    <form action={dispatch} className="flex w-full flex-col items-start justify-center gap-2 px-4">
+    <form
+      action={handleSubmit}
+      className="flex w-full flex-col items-start justify-center gap-2 px-4"
+    >
       <div className="flex w-full flex-col items-start justify-center gap-1">
         <label className="block text-xs font-medium text-neutral-950" htmlFor="title">
           Name
@@ -162,6 +172,15 @@ export default function EditForm({ technology }: { technology: Technology }) {
           )}
         </div>
       </div>
+
+      <input
+        type="hidden"
+        className="peer block rounded-md border border-neutral-200 p-2 text-neutral-950 outline-2"
+        id="isDraft"
+        name="isDraft"
+        value={isDraft ? 'true' : 'false'}
+      />
+
       <div className="flex w-full items-center justify-between gap-2">
         <div aria-live="polite" className="flex h-8 items-center gap-1 text-sm text-red-500">
           {state.message && (
@@ -173,7 +192,29 @@ export default function EditForm({ technology }: { technology: Technology }) {
         </div>
 
         <div className="flex items-center gap-2">
-          <EditTechnologyButton />
+          <Button
+            aria-disabled={pending}
+            className={
+              'border bg-neutral-900 px-4 py-2 text-white shadow-sm hover:bg-neutral-700 focus-visible:outline-neutral-500 active:bg-neutral-600'
+            }
+            onClick={() => {
+              setIsDraft(false);
+            }}
+          >
+            {!technology.isDraft ? 'Edit technology' : 'Edit and publish technology'}
+          </Button>
+
+          <Button
+            aria-disabled={pending}
+            className={
+              'border bg-gray-500 px-4 py-2 text-white shadow-sm hover:bg-gray-700 focus-visible:outline-neutral-500 active:bg-neutral-600'
+            }
+            onClick={() => {
+              setIsDraft(true);
+            }}
+          >
+            {technology.isDraft ? 'Edit technology draft' : 'Edit and save technology as draft'}
+          </Button>
 
           <Link
             href={`/technologies`}
@@ -186,19 +227,6 @@ export default function EditForm({ technology }: { technology: Technology }) {
     </form>
   );
 }
-
-const EditTechnologyButton = () => {
-  const { pending } = useFormStatus();
-
-  return (
-    <Button
-      aria-disabled={pending}
-      className="border bg-neutral-900 px-4 py-2 text-white shadow-sm hover:bg-neutral-700 focus-visible:outline-neutral-500 active:bg-neutral-600"
-    >
-      Edit technology
-    </Button>
-  );
-};
 
 function CategorySelect({
   selectedCategory,
