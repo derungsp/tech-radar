@@ -13,7 +13,7 @@ export default function TableOverView({ technologies }: { technologies: Technolo
   }
 
   return (
-    <div className="grid md:grid-cols-2">
+    <div className="grid lg:grid-cols-2">
       <Table
         title="PLATFORMS"
         technologies={technologies.filter((i) => i.category === 'PLATFORMS')}

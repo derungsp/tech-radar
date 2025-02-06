@@ -48,13 +48,9 @@ export default function LoginForm() {
     <form action={authenticate} className="w-full space-y-3 px-10">
       <h1 className="mb-3 text-2xl text-neutral-900">Please login</h1>
 
-      {/* <Suspense fallback={<div>Loading search parameter...</div>}>
-        <SearchParamsHandler setCallbackUrl={setCallbackUrl} />
-      </Suspense> */}
-
       <div className="w-full">
-        <div>
-          <label className="mb-3 mt-5 block text-xs font-medium text-neutral-900" htmlFor="email">
+        <div className="flex flex-col gap-1">
+          <label className="block text-xs font-medium text-neutral-900" htmlFor="email">
             Email
           </label>
           <div className="relative">
@@ -68,12 +64,10 @@ export default function LoginForm() {
             />
             <AtSymbolIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-neutral-500 peer-focus:text-neutral-700" />
           </div>
+          <div id="email-error" aria-live="polite" className="h-4 text-xs text-red-500"></div>
         </div>
-        <div className="mt-4">
-          <label
-            className="mb-3 mt-5 block text-xs font-medium text-neutral-900"
-            htmlFor="password"
-          >
+        <div className="flex flex-col gap-1">
+          <label className="block text-xs font-medium text-neutral-900" htmlFor="password">
             Password
           </label>
           <div className="relative">
@@ -91,7 +85,7 @@ export default function LoginForm() {
         </div>
       </div>
       <LoginButton />
-      <div className="flex h-8 items-start space-x-1">
+      <div className="flex h-8 items-center space-x-1 py-5">
         {error === 'CredentialsSignin' && (
           <>
             <ExclamationCircleIcon className="h-5 w-5 text-red-500" />

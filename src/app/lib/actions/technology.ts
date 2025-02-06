@@ -2,7 +2,6 @@
 
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
 import { db } from '@/utils/db';
 import { Ring, TechnologyCategory } from '@prisma/client';
 
@@ -11,7 +10,7 @@ const booleanFromString = z.preprocess((val) => val === 'true', z.boolean());
 const TechnologySchema = z.object({
   id: z.string(),
   name: z.string().nonempty(),
-  publishedAt: z.date(),
+  publishedAt: z.date().optional().nullable(),
   techDescription: z.string().nonempty(),
   ringDescription: z.string().nullable().optional(),
   ring: z.preprocess((val) => (val === '' ? null : val), z.nativeEnum(Ring).nullable().optional()),
@@ -85,8 +84,8 @@ export async function createTechnology(prevState: State, formData: FormData) {
     return { message: 'Database Error: Failed to create technology.' };
   }
 
-  revalidatePath('/technologies');
-  redirect('/technologies');
+  revalidatePath('/admin/technologies');
+  return { message: 'Technology successfully created!', success: true };
 }
 
 export async function updateTechnology(id: string, prevState: State, formData: FormData) {
@@ -109,8 +108,13 @@ export async function updateTechnology(id: string, prevState: State, formData: F
     };
   }
 
-  const { name, techDescription, ringDescription, ring, category, publishedAt, isDraft } =
-    validatedFields.data;
+  const { name, techDescription, ringDescription, ring, category, isDraft } = validatedFields.data;
+
+  let { publishedAt } = validatedFields.data;
+
+  if (!isDraft && !publishedAt) {
+    publishedAt = new Date();
+  }
 
   try {
     await db.technology.update({
@@ -129,8 +133,8 @@ export async function updateTechnology(id: string, prevState: State, formData: F
     return { message: 'Database Error: Failed to update technology.' };
   }
 
-  revalidatePath('/technologies');
-  redirect('/technologies');
+  revalidatePath('/admin/technologies');
+  return { message: 'Technology successfully edited!', success: true };
 }
 
 export async function deleteTechnology(id: string) {
@@ -140,8 +144,9 @@ export async function deleteTechnology(id: string) {
     return { message: 'Database Error: Failed to delete technology.' };
   }
 
-  revalidatePath('/technologies');
-  redirect('/technologies');
+  revalidatePath('/admin/technologies');
+
+  return { message: 'Technology successfully deleted!', success: true };
 }
 
 // Error State

@@ -91,52 +91,134 @@ export default function TechRadar({ technologies }: { technologies: Technology[]
       const y = Math.sin(angle) * r;
 
       if (technology.ring === Ring.ADOPT) {
-        svg.append('circle').attr('cx', x).attr('cy', y).attr('r', 6).attr('fill', colors[0]);
-      } else if (technology.ring === Ring.TRIAL) {
-        svg.append('circle').attr('cx', x).attr('cy', y).attr('r', 6).attr('fill', colors[1]);
-      } else if (technology.ring === Ring.ASSESS) {
-        svg.append('circle').attr('cx', x).attr('cy', y).attr('r', 6).attr('fill', colors[2]);
-      } else if (technology.ring === Ring.HOLD) {
-        svg.append('circle').attr('cx', x).attr('cy', y).attr('r', 6).attr('fill', colors[3]);
-      }
+        const tooltipGroup = svg.append('g');
 
-      svg
-        .append('text')
-        .attr('x', x + 10)
-        .attr('y', y)
-        .text(technology.name)
-        .attr('font-size', '12px')
-        .attr('fill', '#333');
+        tooltipGroup
+          .append('circle')
+          .attr('cx', x)
+          .attr('cy', y)
+          .attr('r', 6)
+          .attr('fill', colors[0])
+          .on('mouseover', function () {
+            d3.select(this).attr('r', 10);
+            tooltip.style('display', 'block');
+          })
+          .on('mousemove', function (event) {
+            tooltip
+              .style('left', `${event.pageX + 10}px`)
+              .style('top', `${event.pageY - 20}px`)
+              .html(`<strong>${technology.name}</strong><br>${technology.techDescription}`);
+          })
+          .on('mouseout', function () {
+            d3.select(this).attr('r', 6);
+            tooltip.style('display', 'none');
+          });
+      } else if (technology.ring === Ring.TRIAL) {
+        const tooltipGroup = svg.append('g');
+
+        tooltipGroup
+          .append('circle')
+          .attr('cx', x)
+          .attr('cy', y)
+          .attr('r', 6)
+          .attr('fill', colors[1])
+          .on('mouseover', function () {
+            d3.select(this).attr('r', 10);
+            tooltip.style('display', 'block');
+          })
+          .on('mousemove', function (event) {
+            tooltip
+              .style('left', `${event.pageX + 10}px`)
+              .style('top', `${event.pageY - 20}px`)
+              .html(`<strong>${technology.name}</strong><br>${technology.techDescription}`);
+          })
+          .on('mouseout', function () {
+            d3.select(this).attr('r', 6);
+            tooltip.style('display', 'none');
+          });
+      } else if (technology.ring === Ring.ASSESS) {
+        const tooltipGroup = svg.append('g');
+
+        tooltipGroup
+          .append('circle')
+          .attr('cx', x)
+          .attr('cy', y)
+          .attr('r', 6)
+          .attr('fill', colors[2])
+          .on('mouseover', function () {
+            d3.select(this).attr('r', 10);
+            tooltip.style('display', 'block');
+          })
+          .on('mousemove', function (event) {
+            tooltip
+              .style('left', `${event.pageX + 10}px`)
+              .style('top', `${event.pageY - 20}px`)
+              .html(`<strong>${technology.name}</strong><br>${technology.techDescription}`);
+          })
+          .on('mouseout', function () {
+            d3.select(this).attr('r', 6);
+            tooltip.style('display', 'none');
+          });
+      } else if (technology.ring === Ring.HOLD) {
+        const tooltipGroup = svg.append('g');
+
+        tooltipGroup
+          .append('circle')
+          .attr('cx', x)
+          .attr('cy', y)
+          .attr('r', 6)
+          .attr('fill', colors[3])
+          .on('mouseover', function () {
+            d3.select(this).attr('r', 10);
+            tooltip.style('display', 'block');
+          })
+          .on('mousemove', function (event) {
+            tooltip
+              .style('left', `${event.pageX + 10}px`)
+              .style('top', `${event.pageY - 20}px`)
+              .html(`<strong>${technology.name}</strong><br>${technology.techDescription}`);
+          })
+          .on('mouseout', function () {
+            d3.select(this).attr('r', 6);
+            tooltip.style('display', 'none');
+          });
+      }
     });
+
+    const tooltip = d3
+      .select('body')
+      .append('div')
+      .attr(
+        'class',
+        'absolute bg-white text-sm text-gray-700 shadow-lg rounded px-3 py-2 border border-gray-300',
+      )
+      .style('display', 'none')
+      .style('pointer-events', 'none')
+      .style('position', 'absolute')
+      .style('z-index', '1000');
   }, [technologies, size]);
 
   return (
     <div className="flex flex-col items-center">
-      <div className="absolute left-5 top-28">
-        <h1>TOOLS</h1>
-        {renderTechnologyList('TOOLS', technologies)}
-      </div>
-      <div className="absolute right-5 top-28">
-        <h1>LANGUAGES</h1>
-        {renderTechnologyList('LANGUAGES', technologies)}
-      </div>
-      <div className="absolute bottom-5 left-5">
-        <h1>PLATFORMS</h1>
-        {renderTechnologyList('PLATFORMS', technologies)}
-      </div>
-      <div className="absolute bottom-5 right-5">
-        <h1>TECHNIQUES</h1>
-        {renderTechnologyList('TECHNIQUES', technologies)}
-      </div>
       <svg className="lg:max-w-[90%] xl:max-w-[80%] 2xl:max-w-[1200px]" ref={ref}></svg>
 
-      <div className="flex flex-wrap space-x-6">
-        {rings.map((ring, i) => (
-          <div key={ring} className="flex items-center space-x-2">
-            <div className="h-4 w-4 rounded-full" style={{ backgroundColor: colors[i] }}></div>
-            <span className="text-sm font-medium">{ring}</span>
-          </div>
-        ))}
+      <div className="w-full text-left">
+        <div className="left-5 top-28 mb-5 md:absolute">
+          <h1>TOOLS</h1>
+          {renderTechnologyList('TOOLS', technologies)}
+        </div>
+        <div className="right-5 top-28 mb-5 md:absolute">
+          <h1>LANGUAGES</h1>
+          {renderTechnologyList('LANGUAGES', technologies)}
+        </div>
+        <div className="bottom-5 left-5 mb-5 md:absolute">
+          <h1>PLATFORMS</h1>
+          {renderTechnologyList('PLATFORMS', technologies)}
+        </div>
+        <div className="bottom-5 right-5 mb-5 md:absolute">
+          <h1>TECHNIQUES</h1>
+          {renderTechnologyList('TECHNIQUES', technologies)}
+        </div>
       </div>
     </div>
   );
@@ -172,13 +254,13 @@ function renderTechnologyList(category: TechnologyCategory, technologies: Techno
         ([ring, techs], index) =>
           techs.length > 0 && (
             <div key={ring}>
-              <h2 className="text-sm font-semibold text-gray-700">
+              <h2 style={{ color: colors[index] }} className="text-sm font-semibold">
                 {index + 1}. {ring}
               </h2>
               <ul className="list-inside list-decimal text-sm text-gray-600">
                 {techs.map((tech, i) => (
-                  <li key={tech.id}>
-                    {i + 1}. {tech.name}
+                  <li className="list-none" key={tech.id}>
+                    {index + 1}.{i + 1}. {tech.name}
                   </li>
                 ))}
               </ul>

@@ -10,10 +10,12 @@ import { createTechnology } from '@/app/lib/actions/technology';
 import { Ring, TechnologyCategory, UserRole } from '@prisma/client';
 import clsx from 'clsx';
 import { useAuth } from '@/context/auth-context';
-import { redirect } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
 
 export default function CreateForm() {
   const { user } = useAuth();
+  const router = useRouter();
 
   if (user?.role !== UserRole.CTO && user?.role !== UserRole.TECHLEAD) {
     redirect('/');
@@ -21,7 +23,6 @@ export default function CreateForm() {
 
   const initialState = { message: '', errors: {} };
   const [state, dispatch] = useActionState(createTechnology, initialState);
-  const [currentDateTime, setCurrentDateTime] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<TechnologyCategory | null>(null);
   const [selectedRing, setSelectedRing] = useState<Ring | null>(null);
   const { pending } = useFormStatus();
@@ -45,11 +46,16 @@ export default function CreateForm() {
   };
 
   useEffect(() => {
-    const now = new Date();
-    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-    const formattedDateTime = now.toISOString().slice(0, 16);
-    setCurrentDateTime(formattedDateTime);
-  }, []);
+    if (state.message) {
+      if (state.errors && Object.keys(state.errors).length > 0) {
+        toast.error(state.message);
+      } else {
+        toast.success(state.message);
+        router.push('/admin/technologies');
+        router.refresh();
+      }
+    }
+  }, [state, router]);
 
   return (
     <form action={dispatch} className="flex w-full flex-col items-start justify-center gap-2 px-4">
@@ -154,31 +160,6 @@ export default function CreateForm() {
           )}
         </div>
       </div>
-      <div className="flex w-full flex-col items-start justify-center gap-1">
-        <label className="block text-xs font-medium text-neutral-950" htmlFor="notionUrl">
-          Publish at
-        </label>
-        <input
-          type="datetime-local"
-          className="peer block w-full rounded-md border border-neutral-200 p-4 text-sm text-neutral-950 outline-2 placeholder:text-gray-500"
-          id="publishedAt"
-          name="publishedAt"
-          value={currentDateTime}
-          onChange={(e) => {
-            setCurrentDateTime(e.target.value);
-            handleInputChange(e);
-          }}
-        />
-        <div id="publishedAt-error" aria-live="polite" className="h-4 text-xs text-red-500">
-          {state.errors?.publishedAt && (
-            <>
-              {state.errors.publishedAt.map((error: string) => (
-                <p key={error}>{error}</p>
-              ))}
-            </>
-          )}
-        </div>
-      </div>
 
       <input
         type="hidden"
@@ -188,16 +169,16 @@ export default function CreateForm() {
         value={formData.isDraft ? 'true' : 'false'}
       />
 
-      <div className="flex w-full items-center justify-between gap-2">
-        <div aria-live="polite" className="flex h-8 items-center gap-1 text-sm text-red-500">
-          {state.message && (
-            <>
-              <ExclamationCircleIcon className="h-5 w-5 text-red-500" />
-              <p>{state.message}</p>
-            </>
-          )}
-        </div>
+      <div aria-live="polite" className="flex h-8 items-center gap-1 text-sm text-red-500">
+        {!state.success && state.message && (
+          <>
+            <ExclamationCircleIcon className="h-5 w-5 text-red-500" />
+            <p>{state.message}</p>
+          </>
+        )}
+      </div>
 
+      <div className="flex w-full items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <Button
             aria-disabled={pending}
@@ -208,23 +189,24 @@ export default function CreateForm() {
               setFormData({ ...formData, isDraft: false });
             }}
           >
-            Create Technology
+            Create
           </Button>
-
+        </div>
+        <div className="flex items-center gap-2">
           <Button
             aria-disabled={pending}
             className={
-              'border bg-gray-500 px-4 py-2 text-white shadow-sm hover:bg-gray-700 focus-visible:outline-neutral-500 active:bg-neutral-600'
+              'border bg-gray-100 px-4 py-2 text-neutral-950 shadow-sm hover:bg-neutral-900 hover:text-white focus-visible:outline-neutral-500 active:bg-neutral-600'
             }
             onClick={() => {
               setFormData({ ...formData, isDraft: true });
             }}
           >
-            Save as Draft
+            Save draft
           </Button>
 
           <Link
-            href={`/technologies`}
+            href={`/admin/technologies`}
             className="h-10 rounded-lg border bg-white px-4 py-2 text-neutral-950 shadow-sm hover:bg-neutral-900 hover:text-white focus-visible:outline-neutral-500 active:bg-neutral-600"
           >
             Cancel

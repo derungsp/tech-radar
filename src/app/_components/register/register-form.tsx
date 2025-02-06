@@ -80,7 +80,7 @@ export default function RegisterForm() {
       <h1 className="mb-3 text-2xl text-neutral-900">Please register</h1>
 
       <div className="w-full">
-        <div>
+        <div className="flex flex-col gap-1">
           <label className="block text-xs font-medium text-neutral-900" htmlFor="firstname">
             First Name
           </label>
@@ -195,7 +195,7 @@ export default function RegisterForm() {
             />
             <KeyIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-neutral-500 peer-focus:text-neutral-700" />
           </div>
-          <div id="password-error" aria-live="polite" className="text-xs text-red-500">
+          <div id="password-error" aria-live="polite" className="mb-5 text-xs text-red-500">
             {state.errors?.password && (
               <>
                 {state.errors.password.map((error: string) => (
@@ -206,7 +206,7 @@ export default function RegisterForm() {
           </div>
         </div>
         <RegisterButton />
-        <div className="flex h-8 items-center space-x-1 pt-3">
+        <div className="flex h-8 items-center space-x-1 py-5">
           {state.message && state.errors && (
             <>
               <ExclamationCircleIcon className="h-6 w-6 text-red-500" />

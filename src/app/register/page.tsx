@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default async function RegisterPage() {
   const session = await getServerAuthSession();
   if (session) {
-    redirect('/technologies');
+    redirect('/admin/technologies');
   }
 
   return (

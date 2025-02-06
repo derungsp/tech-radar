@@ -4,9 +4,10 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import { cn } from '@/app/lib/cn';
 import { LogoutLink } from '../login-link';
 import { useAuth } from '@/context/auth-context';
+import clsx from 'clsx';
+import { UserRole } from '@prisma/client';
 
 export default function Header() {
   const { user } = useAuth();
@@ -23,30 +24,48 @@ export default function Header() {
 
   return (
     <header className="z-50 flex w-full flex-col bg-white shadow-sm">
-      <div className="mx-auto flex h-20 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Link href="/" className="relative flex h-14 w-64 items-center justify-center">
+      <div className="mx-auto flex h-20 w-full items-center justify-between px-4 sm:px-6 lg:px-8">
+        <Link href="/" className="relative flex h-14 items-center justify-center">
           <h1 className="text-2xl">TechRadar</h1>
         </Link>
 
         <nav className="hidden gap-8 lg:flex lg:justify-evenly">
           <Link
             href={'/'}
-            className={cn(
+            className={clsx(
               'hover:text-primary',
               pathname === '/' ? 'text-primary font-semibold' : 'text-gray-900',
             )}
           >
             Home
           </Link>
-          <Link
-            href={'/technologies'}
-            className={cn(
-              'hover:text-primary',
-              pathname === '/technologies' ? 'text-primary font-semibold' : 'text-gray-900',
-            )}
-          >
-            Technologies
-          </Link>
+
+          {user?.role === UserRole.CTO || user?.role === UserRole.TECHLEAD ? (
+            <>
+              <Link
+                href={'/admin/technologies'}
+                className={clsx(
+                  'hover:text-primary',
+                  pathname === '/admin/technologies'
+                    ? 'text-primary font-semibold'
+                    : 'text-gray-900',
+                )}
+              >
+                Technologies
+              </Link>
+              <Link
+                href={'/admin/logs'}
+                className={clsx(
+                  'hover:text-primary',
+                  pathname === '/admin/logs' ? 'text-primary font-semibold' : 'text-gray-900',
+                )}
+              >
+                Logs
+              </Link>
+            </>
+          ) : (
+            <></>
+          )}
 
           {user ? (
             <>
@@ -58,7 +77,7 @@ export default function Header() {
           )}
         </nav>
 
-        <MobileMenu isOpen={isOpen} setIsOpen={setIsOpen} />
+        <MobileMenu isOpen={isOpen} setIsOpen={setIsOpen} user={user} />
         <HamburgerButton isOpen={isOpen} setIsOpen={setIsOpen} />
       </div>
     </header>
@@ -68,9 +87,17 @@ export default function Header() {
 const MobileMenu = ({
   isOpen,
   setIsOpen,
+  user,
 }: {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
+  user: {
+    id: string;
+    firstname: string;
+    lastname: string;
+    email: string;
+    role: UserRole;
+  } | null;
 }) => {
   const router = useRouter();
   const pathname = usePathname();
@@ -103,26 +130,48 @@ const MobileMenu = ({
                 router.push('/');
               }}
               href={'/'}
-              className={cn(
+              className={clsx(
                 'hover:text-primary',
                 pathname === '/' ? 'text-primary font-semibold' : 'text-gray-900',
               )}
             >
               Home
             </Link>
-            <Link
-              onClick={() => {
-                setIsOpen(false);
-                router.push('/technologies');
-              }}
-              href={'/technologies'}
-              className={cn(
-                'hover:text-primary',
-                pathname === '/technologies' ? 'text-primary font-semibold' : 'text-gray-900',
-              )}
-            >
-              Technologies
-            </Link>
+
+            {user?.role === UserRole.CTO || user?.role === UserRole.TECHLEAD ? (
+              <>
+                <Link
+                  onClick={() => {
+                    setIsOpen(false);
+                    router.push('/admin/technologies');
+                  }}
+                  href={'/admin/technologies'}
+                  className={clsx(
+                    'hover:text-primary',
+                    pathname === '/admin/technologies'
+                      ? 'text-primary font-semibold'
+                      : 'text-gray-900',
+                  )}
+                >
+                  Technologies
+                </Link>
+                <Link
+                  onClick={() => {
+                    setIsOpen(false);
+                    router.push('/admin/logs');
+                  }}
+                  href={'/admin/logs'}
+                  className={clsx(
+                    'hover:text-primary',
+                    pathname === '/admin/logs' ? 'text-primary font-semibold' : 'text-gray-900',
+                  )}
+                >
+                  Logs
+                </Link>
+              </>
+            ) : (
+              <></>
+            )}
 
             <LogoutLink />
           </div>

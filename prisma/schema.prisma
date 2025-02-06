@@ -56,3 +56,16 @@ model Technology {
 
   @@map("technologies")
 }
+
+model Log {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  user    String?
+  message String
+  level   String
+  source  String
+
+  timestamp DateTime @default(now())
+
+  @@map("logs")
+}

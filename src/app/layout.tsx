@@ -36,7 +36,7 @@ export default async function RootLayout({
       >
         <AuthProvider user={user}>
           <Header />
-          {children}
+          <div className="px-5">{children}</div>
           <Toaster position="bottom-right" />
         </AuthProvider>
       </body>

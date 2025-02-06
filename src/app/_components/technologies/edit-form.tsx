@@ -6,34 +6,27 @@ import { Button } from '@/app/_components/button';
 import { useFormStatus } from 'react-dom';
 import { CheckIcon, ChevronDownIcon, ExclamationCircleIcon } from '@heroicons/react/24/outline';
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react';
-import { useActionState, useState } from 'react';
+import { useActionState, useEffect, useState } from 'react';
 import { updateTechnology } from '@/app/lib/actions/technology';
 import { Ring, TechnologyCategory } from '@prisma/client';
 import clsx from 'clsx';
 import { useAuth } from '@/context/auth-context';
-import { redirect } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
 
 export default function EditForm({ technology }: { technology: Technology }) {
   const { user } = useAuth();
+  const router = useRouter();
 
   if (user?.role !== UserRole.CTO && user?.role !== UserRole.TECHLEAD) {
     redirect('/');
   }
-
-  const formatDateForInput = (date: Date | null) => {
-    if (!date) return '';
-    const d = new Date(date);
-    return d.toISOString().slice(0, 16);
-  };
 
   const initialState = { message: '', errors: {} };
   const updateTechnologyById = updateTechnology.bind(null, technology.id);
   const [state, dispatch] = useActionState(updateTechnologyById, initialState);
   const { pending } = useFormStatus();
 
-  const [currentDateTime, setCurrentDateTime] = useState(
-    formatDateForInput(technology.publishedAt),
-  );
   const [selectedCategory, setSelectedCategory] = useState<TechnologyCategory | null>(
     technology.category,
   );
@@ -44,6 +37,18 @@ export default function EditForm({ technology }: { technology: Technology }) {
     formData.set('isDraft', isDraft.toString());
     dispatch(formData);
   };
+
+  useEffect(() => {
+    if (state.message) {
+      if (state.errors && Object.keys(state.errors).length > 0) {
+        toast.error(state.message);
+      } else {
+        toast.success(state.message);
+        router.push('/admin/technologies');
+        router.refresh();
+      }
+    }
+  }, [state, router]);
 
   return (
     <form
@@ -148,30 +153,6 @@ export default function EditForm({ technology }: { technology: Technology }) {
           )}
         </div>
       </div>
-      <div className="flex w-full flex-col items-start justify-center gap-1">
-        <label className="block text-xs font-medium text-neutral-950" htmlFor="notionUrl">
-          Publish at
-        </label>
-        <input
-          type="datetime-local"
-          className="peer block w-full rounded-md border border-neutral-200 p-4 text-sm text-neutral-950 outline-2 placeholder:text-gray-500"
-          id="publishedAt"
-          name="publishedAt"
-          defaultValue={currentDateTime}
-          onChange={(e) => {
-            setCurrentDateTime(e.target.value);
-          }}
-        />
-        <div id="publishedAt-error" aria-live="polite" className="h-4 text-xs text-red-500">
-          {state.errors?.publishedAt && (
-            <>
-              {state.errors.publishedAt.map((error: string) => (
-                <p key={error}>{error}</p>
-              ))}
-            </>
-          )}
-        </div>
-      </div>
 
       <input
         type="hidden"
@@ -181,16 +162,16 @@ export default function EditForm({ technology }: { technology: Technology }) {
         value={isDraft ? 'true' : 'false'}
       />
 
-      <div className="flex w-full items-center justify-between gap-2">
-        <div aria-live="polite" className="flex h-8 items-center gap-1 text-sm text-red-500">
-          {state.message && (
-            <>
-              <ExclamationCircleIcon className="h-5 w-5 text-red-500" />
-              <p>{state.message}</p>
-            </>
-          )}
-        </div>
+      <div aria-live="polite" className="flex h-8 items-center gap-1 text-sm text-red-500">
+        {!state.success && state.message && (
+          <>
+            <ExclamationCircleIcon className="h-5 w-5 text-red-500" />
+            <p>{state.message}</p>
+          </>
+        )}
+      </div>
 
+      <div className="flex w-full items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <Button
             aria-disabled={pending}
@@ -201,19 +182,21 @@ export default function EditForm({ technology }: { technology: Technology }) {
               setIsDraft(false);
             }}
           >
-            {!technology.isDraft ? 'Edit technology' : 'Edit and publish technology'}
+            {!technology.isDraft ? 'Edit' : 'Edit and publish'}
           </Button>
+        </div>
 
+        <div className="flex items-center gap-2">
           <Button
             aria-disabled={pending}
             className={
-              'border bg-gray-500 px-4 py-2 text-white shadow-sm hover:bg-gray-700 focus-visible:outline-neutral-500 active:bg-neutral-600'
+              'border bg-gray-100 px-4 py-2 text-neutral-950 shadow-sm hover:bg-neutral-900 hover:text-white focus-visible:outline-neutral-500 active:bg-neutral-600'
             }
             onClick={() => {
               setIsDraft(true);
             }}
           >
-            {technology.isDraft ? 'Edit technology draft' : 'Edit and save technology as draft'}
+            {technology.isDraft ? 'Edit draft' : 'Edit and save as draft'}
           </Button>
 
           <Link

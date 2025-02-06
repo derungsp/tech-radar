@@ -7,6 +7,7 @@ import { db } from '@/utils/db';
 import { env } from '@/env.mjs';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import { UserRole } from '@prisma/client';
+import { logActivity } from './logger';
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -113,6 +114,11 @@ export const authOptions: NextAuthOptions = {
           const passwordsMatch = await bcrypt.compare(password, user.password);
 
           if (passwordsMatch) {
+            await logActivity({
+              user: user.email,
+              message: 'User logged in successfully',
+            });
+
             return user;
           }
         }
