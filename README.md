@@ -73,6 +73,18 @@ Das folgende Diagramm zeigt eine Next.js 15 Architektur mit Server Side Renderin
 
 ![Kontextdiagramm](./docs/context.png)
 
+## 3.3 Projektvorgehen
+
+Da das Projekt nur von einer Person entwickelt worden ist, fiel dieser Bereich einfach aus. Es wird mit mithilfe von GitHub die gesamte Applikation entwickelt und verwaltet. Das ermöglicht den Zugriff auf alle historischen Artifakte.
+
+Weiter wurden Issues und Projects von GitHub verwendet, um die Projektanforderungen zu planen und abzuarbeiten. Diese Issues wurden erst auf einen Kanban-Board angeordnet:
+
+![Kanban-Board](./docs/kanban-board.png)
+
+Anschliessend wurden die einzelnen User-Stories priorisiert (must, should, could) und auf einem Prioritäten-Board dann für die Realisierung strukturiert:
+
+![Prioritäten-Board](./docs/priority-board.png)
+
 # 4. Lösungsstrategie
 
 Für die Entwicklung der Webanwendung fiel die Wahl auf **Next.js 15 mit App Router**, da es eine moderne Grundlage für performante Webanwendungen bietet. Durch **Server Side Rendering (SSR)** werden die Seiten direkt auf dem Server gerendert und als fertiges HTML an den Client ausgeliefert. Obwohl SSR beim initialen Laden tendenziell langsamer ist als Single Page Applications (SPAs) wie Angular, bietet Next.js mit seinem **intelligenten Caching** eine Lösung, die wiederholte Anfragen extrem schnell macht. Dies sorgt für eine hohe Performance, besonders bei dynamischen Inhalten und SEO-relevanten Seiten.
@@ -124,7 +136,11 @@ Um zu Demonstrationszwecken die Berechtigungen und Rollen zeigen zu können, wur
 | Stefanie Müller | Tech-Lead | stefaniemueller@tech-radar.ch | hyxbib-waRmak-5zevqo |
 | Hans Meier      | Employee  | hansmeier@tech-radar.ch       | hyxbib-waRmak-5zevqo |
 
-# 8. Risiken und technische Schulden
+# 8. Deployment
+
+Das Projekt wurde laufend und automatisch auf Vercel deployed. Vercel bietet die Eigenschaft, sich direkt mit GitHub zu verbinden und Deployments automatisch nach Commits durchzuführen. So erstellt Vercel auch automatisch Production-, Development-, und Preview-Builds, je nach Branch des Commits (main, etc.).
+
+# 9. Risiken und technische Schulden
 
 | Titel                          | Typ         | Beschreibung                                                                                                                                                             |
 | ------------------------------ | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -134,11 +150,11 @@ Um zu Demonstrationszwecken die Berechtigungen und Rollen zeigen zu können, wur
 | Redundanzen entfernen          | Refactoring | An gewissen Stellen im Projekt, gibt es Komponenten, die redundant bzw. sehr ähnlich mehrfach vorkommen. Diese kann man in einem weiteren Schritt zusammenfassen.        |
 | Tooltip-Alternative für Mobile | Feature     | Die Tooltip lassen sich natürlich nicht gut anzeigen auf einem Gerät mit Touchscreen. Eine Alternative wäre schön.                                                       |
 
-# Fazit & Reflexion
+# 10. Fazit & Reflexion
 
 hier kommt das fazit und die reflexion
 
-# Arbeitsjournal
+# 11. Arbeitsjournal
 
 | Datum             | Aufwand (h) | Titel                                                             | Beschreibung                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | ----------------- | ----------- | ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
