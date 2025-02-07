@@ -2,6 +2,8 @@
 
 #### Pascal Derungs - HSLU Blockwoche HS24
 
+Link zur produktiven Umgebung: [tech-radar-ten.vercel.app](https://tech-radar-ten.vercel.app)
+
 # 1. Einführung und Ziele
 
 Das Projekt im Modul Web Programming Lab ermöglicht es, die gelernten Inhalte aus dem Unterricht direkt anwenden zu können. Der Fokus des Projektes liegt auf die Anwendung von noch nicht bekannten Web Technologien.
@@ -136,23 +138,32 @@ Um zu Demonstrationszwecken die Berechtigungen und Rollen zeigen zu können, wur
 | Stefanie Müller | Tech-Lead | stefaniemueller@tech-radar.ch | hyxbib-waRmak-5zevqo |
 | Hans Meier      | Employee  | hansmeier@tech-radar.ch       | hyxbib-waRmak-5zevqo |
 
-# 8. Deployment
+# 8. CI / CD
+
+Auf GitHub wurde eine CI-Pipeline definiert, die das Projekt mit ESLint nochmals überprüft und alle definierten Tests ausführt. Das Code-Coverage-Protokoll wird als Artefakt mit dem Job abgespeichert.
 
 Das Projekt wurde laufend und automatisch auf Vercel deployed. Vercel bietet die Eigenschaft, sich direkt mit GitHub zu verbinden und Deployments automatisch nach Commits durchzuführen. So erstellt Vercel auch automatisch Production-, Development-, und Preview-Builds, je nach Branch des Commits (main, etc.).
 
 # 9. Risiken und technische Schulden
 
-| Titel                          | Typ         | Beschreibung                                                                                                                                                             |
-| ------------------------------ | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Tech-Radar Überschneidungen    | Refactoring | Punkte im Tech-Radar werden zurzeit zufällig pro Ring gesetzt. D.h. die Punkte können sich überschneiden, was nicht schön ist.                                           |
-| Usermanagement                 | Feature     | Ein Usermanagement direkt auf der Website erleichtert das Erstellen und Bearbeiten von Benutzern. Zurzeit kann nur wie Registrierung ein neuer Employee erstellt werden. |
-| Mandatenfähigkeit              | Feature     | Ausweitung auf mehrere Mandate. Firmen können erstellt werden und Zugriffe bzw. Tech-Radars pro Firma.                                                                   |
-| Redundanzen entfernen          | Refactoring | An gewissen Stellen im Projekt, gibt es Komponenten, die redundant bzw. sehr ähnlich mehrfach vorkommen. Diese kann man in einem weiteren Schritt zusammenfassen.        |
-| Tooltip-Alternative für Mobile | Feature     | Die Tooltip lassen sich natürlich nicht gut anzeigen auf einem Gerät mit Touchscreen. Eine Alternative wäre schön.                                                       |
+| Titel                            | Typ         | Beschreibung                                                                                                                                                             |
+| -------------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Tech-Radar Überschneidungen      | Refactoring | Punkte im Tech-Radar werden zurzeit zufällig pro Ring gesetzt. D.h. die Punkte können sich überschneiden, was nicht schön ist.                                           |
+| Usermanagement                   | Feature     | Ein Usermanagement direkt auf der Website erleichtert das Erstellen und Bearbeiten von Benutzern. Zurzeit kann nur wie Registrierung ein neuer Employee erstellt werden. |
+| Mandatenfähigkeit                | Feature     | Ausweitung auf mehrere Mandate. Firmen können erstellt werden und Zugriffe bzw. Tech-Radars pro Firma.                                                                   |
+| Redundanzen entfernen            | Refactoring | An gewissen Stellen im Projekt, gibt es Komponenten, die redundant bzw. sehr ähnlich mehrfach vorkommen. Diese kann man in einem weiteren Schritt zusammenfassen.        |
+| Tooltip-Alternative für Mobile   | Feature     | Die Tooltip lassen sich natürlich nicht gut anzeigen auf einem Gerät mit Touchscreen. Eine Alternative wäre schön.                                                       |
+| Redundanz bei Rollenberechtigung | Refactoring | Die Rollenüberprüfung findet momentan in den gesicherten Komponenten redundant statt und bildet so ein Risiko, wenn man es einheitlich bearbeiten möchte.                |
 
 # 10. Fazit & Reflexion
 
-hier kommt das fazit und die reflexion
+Dieses Modul beziehungsweise die Projektarbeit hat mir sehr gut gefallen, da ich mich für diesen Bereich der Softwareentwicklung interessiere. Trotz vorhandener Erfahrungen mit Angular sowie anderen Technologien, konnte ich bei diversen Themen neue Aspekte mitnehmen, die mich auch zum Denken anregten.
+
+Ich habe aus früheren Beschäftigungen schon viele Erfahrungen mit AngularJS und Angular2+ gemacht, sodass ich mich dazu entschieden habe, das Projekt "Tech-Radar" mit Next.js 15 umzusetzen. Etwas, das mich schon länger reizte. Da ich mit React, Typescript etc. schon vertraut war, ging die Realisierung ziemlich rund.
+
+Vor allem konnte ich neues in Sachen Testing (mit Jest) lernen. Das fiel bei mir bisher sonst ziemlich schlank aus, da eher Frontend-Tests mit Selenium gemacht wurden.
+
+Es war eine Challenge für mich, den Tech-Radar schön visuell anzuzeigen und ich finde es hat immer noch Verbesserungspotenzial. Insbesondere auf der Mobile-Ansicht. Dennoch konnte ich erste Erfahrungen mit d3.js machen und so alle Daten visuell in einem SVG für die Website bereitstellen.
 
 # 11. Arbeitsjournal
 
@@ -162,26 +173,58 @@ hier kommt das fazit und die reflexion
 | 04.02.2025        | 8           | Login / Register Seiten, Navbar, RadarChart und Hosting           | Es wurden eine Login und Register Seite sowie eine erste Navbar mithilfe von Tailwindcss, framer motion und heroicons entwickelt. Deployment auf Vercel wurde eingerichtet. Erste Versuche eines RadarCharts wurden gemacht.                                                                                                                                                                                                                                                                                                                |
 | 05.02.2025        | 10          | Tech-Radar, Technology-Schema, CRUD-Funktionalitäten, Refactoring | Eine erste Version der Tech-Radars wurde entwickelt (Testdaten). Technologien werden auf der Übersichtsseite rollenbasiert angezeigt. Ausserdem können Technologien auf einer seperaten Seite erstellt und abgespeichert werden. Es wurde ein spezieller Select für die Enum's für den Ring und die Kategorie entwickelt. Dazu wurde headlessui eingebunden. Ganzes Projekt wurde überarbeitet und das Editieren sowie das Erstellen von Technologien fertiggestellt. Der Tech-Radar wurden mit Farben und konsistenter Legende verbessert. |
 | 06.02.2025        | 7.5         | Abschluss aller Anforderungen, Refactorings, Doku                 | Alle Anforderungen wurden abgeschlossen. Diagramme des Projekts für die Doku erstellt und die ersten Teile geschrieben. Logger entwickelt, der alle Anmeldungen loggt und durch Tech-Leads und CTOs eingesehen werden kann. Design wurde grundlegend überarbeitet und responsive gemacht. Der Tech-Radar wurde verschönert und mit einer Liste und Tooltips versehen. RadixUI wurde eingebunden, um ein spezielles Accardion anzuzeigen (sah ich irgendwo mal als Idee).                                                                    |
-| **Total Aufwand** | **...**     |                                                                   |
+| 07.02.2025        | 4.5         | Testing, GitHub CI, Refactorings, Dokumentation                   | Es wurde Jest eingebunden für das Testing der Backendlogik und die entsprechenden Tests erstellt. Es werden alle Methoden der Actions und Data Calls getestet und eine Codeabdeckungs-Prüfung gemacht. Ausserdem wurde eine GitHub CI erstellt, die den ESLint und alle Tests durchführt. Zum Schluss wurden noch grossflächig Refactorings am Design vorgenommen, damit alles auf jeden Bildschirmgrössen gut aussieht. Dokumentation wurde noch ergänzt.                                                                                  |
+| **Total Aufwand** | 39          |                                                                   |
 
-# Getting Started
+# Getting Started für die lokale Entwicklung
 
-First, install the dependencies:
+1. Sicherstellen, dass die Environment-Variablen vorhanden sind (.env).
+2. Alle Abhängigkeiten installieren:
 
-```bash
-npm install
-```
+   ```bash
+   npm install
+   ```
 
-Then, run the development server:
+3. Das Prisma-Schema lokal generieren:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+   ```bash
+   npx prisma generate
+   ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+4. Projekt starten:
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   # or
+   pnpm dev
+   # or
+   bun dev
+   ```
+5. Webseite ist nun unter [http://localhost:3000](http://localhost:3000) erreichbar.
+
+Weitere hilfreiche Befehle:
+
+1. Projektbuild erstellen:
+   ```bash
+   npm run build
+   ```
+2. ESLint laufen lassen:
+
+   ```bash
+   npm run lint
+   ```
+
+3. Husky im Projekt registrieren für pre-commit Action:
+   ```bash
+   npm run prepare
+   ```
+4. Mit Prettier das ganze Projekt formatieren:
+   ```bash
+   npm run format
+   ```
+5. Das Prisma-Schema an die DB pushen:
+
+   ```bash
+   npm run db:push
+   ```
