@@ -24,6 +24,12 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Set environment variables for Lint (dummy)
+        run: |
+          echo "DATABASE_URL=http://localhost:5432" >> $GITHUB_ENV
+          echo "NEXTAUTH_SECRET=dummysecret" >> $GITHUB_ENV
+          echo "NEXTAUTH_URL=http://localhost:3000" >> $GITHUB_ENV
+
       - name: Run ESLint
         run: npm run lint
 
