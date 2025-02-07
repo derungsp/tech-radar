@@ -41,6 +41,7 @@ export default function LogList({ logs }: { logs: Log[] }) {
             <AccordionTrigger className="flex w-full border-neutral-200 px-2">
               <div className="flex w-full items-center justify-between gap-8 text-left text-xs font-semibold">
                 <span className="flex-1 text-xs">{log.message}</span>
+                <span className="flex-1 text-xs">{log.user}</span>
                 <span className="flex-1 text-xs">{log.level}</span>
                 <span className="flex-1 text-xs">{log.source}</span>
                 <span className="flex-1 text-xs">{log.timestamp.toUTCString()}</span>
@@ -49,12 +50,14 @@ export default function LogList({ logs }: { logs: Log[] }) {
             <AccordionContent className="flex flex-col bg-neutral-50 p-2">
               <div className="flex items-center justify-between gap-8 text-xs font-semibold">
                 <span className="flex-1">Message</span>
+                <span className="flex-1">User</span>
                 <span className="flex-1">Level</span>
                 <span className="flex-1">Source</span>
                 <span className="flex-1">Timestamp</span>
               </div>
               <div className="flex items-start justify-between gap-8 text-sm">
                 <span className="flex-1">{log.message}</span>
+                <span className="flex-1">{log.user}</span>
                 <span className="flex-1">{log.level}</span>
                 <span className="flex-1">{log.source}</span>
                 <span className="flex-1">{log.timestamp.toUTCString()}</span>

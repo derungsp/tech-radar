@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { PlusCircleIcon } from '@heroicons/react/24/outline';
 import { fetchAllTechnologies } from '../../lib/data/technology';
 import { Metadata } from 'next';
+import CardOverView from '@/app/_components/technologies/card-overview';
 
 export const metadata: Metadata = {
   title: 'Technologies',
@@ -24,7 +25,13 @@ export default async function Technologies() {
         </Link>
       </div>
 
-      <TableOverView technologies={technologies} />
+      <div className="hidden lg:block">
+        <TableOverView technologies={technologies} />
+      </div>
+
+      <div className="lg:hidden">
+        <CardOverView technologies={technologies} />
+      </div>
     </main>
   );
 }

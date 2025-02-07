@@ -2,7 +2,11 @@ import { db } from '@/utils/db';
 
 export async function fetchAllTechnologies() {
   try {
-    return await db.technology.findMany();
+    return await db.technology.findMany({
+      orderBy: {
+        name: 'asc',
+      },
+    });
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch all technologies.');
@@ -11,7 +15,12 @@ export async function fetchAllTechnologies() {
 
 export async function fetchAllPublicTechnologies() {
   try {
-    return await db.technology.findMany({ where: { isDraft: false } });
+    return await db.technology.findMany({
+      where: { isDraft: false },
+      orderBy: {
+        name: 'asc',
+      },
+    });
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch public technologies.');

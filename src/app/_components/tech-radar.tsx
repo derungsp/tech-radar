@@ -200,7 +200,7 @@ export default function TechRadar({ technologies }: { technologies: Technology[]
 
   return (
     <div className="flex flex-col items-center">
-      <svg className="lg:max-w-[90%] xl:max-w-[80%] 2xl:max-w-[1200px]" ref={ref}></svg>
+      <svg className="max-h-[calc(100vh-80px)] max-w-screen-xl" ref={ref}></svg>
 
       <div className="w-full text-left">
         <div className="left-5 top-28 mb-5 md:absolute">
@@ -232,7 +232,7 @@ function renderTechnologyList(category: TechnologyCategory, technologies: Techno
   const filteredTechnologies = technologies.filter((tech) => tech.category === category);
 
   if (filteredTechnologies.length === 0) {
-    return <p className="text-sm text-gray-500">Keine Technologien</p>;
+    return <p className="text-sm text-gray-500">No technology existing</p>;
   }
 
   const groupedByRing: Record<Ring, Technology[]> = {

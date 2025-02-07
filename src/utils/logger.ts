@@ -5,7 +5,7 @@ import { db } from './db';
  * @param message
  * @param level
  * @param source
- * @param userId optional
+ * @param user
  */
 export async function logActivity({
   user,

@@ -16,7 +16,7 @@ export default async function LoginPage() {
 
   return (
     <main className="flex flex-col items-center justify-center">
-      <div>
+      <div className="w-full lg:w-auto">
         <RegisterPageButton />
         <div className="flex flex-col items-center justify-center gap-8 rounded-lg border bg-white pt-10 shadow-sm lg:w-[400px]">
           <LoginForm />

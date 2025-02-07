@@ -173,7 +173,17 @@ const MobileMenu = ({
               <></>
             )}
 
-            <LogoutLink />
+            {user ? (
+              <p
+                onClick={() => {
+                  setIsOpen(false);
+                }}
+              >
+                <LogoutLink />
+              </p>
+            ) : (
+              <></>
+            )}
           </div>
         </motion.nav>
       )}

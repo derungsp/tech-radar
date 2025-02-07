@@ -31,9 +31,9 @@ export default function Table({
   };
 
   return (
-    <div className="overflow-x-auto p-4">
+    <div className="overflow-x-auto py-4 lg:p-4">
       <table className="w-full border-collapse rounded-lg border border-gray-300 shadow-lg">
-        <caption className="caption-top rounded-t-lg p-3 text-left text-lg font-semibold text-gray-700">
+        <caption className="caption-top rounded-t-lg py-3 text-left text-lg font-semibold text-gray-700">
           {title}
         </caption>
         <thead>
@@ -45,6 +45,8 @@ export default function Table({
           </tr>
         </thead>
         <tbody>
+          {technologies.length <= 0 ? <tr>no technologies existing</tr> : <></>}
+
           {technologies.map((technology) => (
             <tr
               key={technology.id}
