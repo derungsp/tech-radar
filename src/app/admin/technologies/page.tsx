@@ -1,8 +1,12 @@
 import TableOverView from '../../_components/technologies/table-overview';
 import Link from 'next/link';
 import { PlusCircleIcon } from '@heroicons/react/24/outline';
-
 import { fetchAllTechnologies } from '../../lib/data/technology';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Technologies',
+};
 
 export default async function Technologies() {
   const technologies = await fetchAllTechnologies();

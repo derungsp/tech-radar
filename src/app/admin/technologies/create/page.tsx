@@ -1,4 +1,9 @@
 import CreateForm from '@/app/_components/technologies/create-form';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Technology create',
+};
 
 export default function CreateTechnology() {
   return (

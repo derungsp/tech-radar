@@ -1,6 +1,11 @@
 import EditForm from '@/app/_components/technologies/edit-form';
 import { fetchTechnologyById } from '@/app/lib/data/technology';
+import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+
+export const metadata: Metadata = {
+  title: 'Technology edit',
+};
 
 export default async function EditTechnology({
   params,
