@@ -29,7 +29,11 @@ describe('Technology Fetch Functions', () => {
 
     const result = await fetchAllTechnologies();
 
-    expect(db.technology.findMany).toHaveBeenCalledWith();
+    expect(db.technology.findMany).toHaveBeenCalledWith({
+      orderBy: {
+        name: 'asc',
+      },
+    });
     expect(result).toEqual(mockTechnologies);
   });
 
@@ -50,7 +54,12 @@ describe('Technology Fetch Functions', () => {
 
     const result = await fetchAllPublicTechnologies();
 
-    expect(db.technology.findMany).toHaveBeenCalledWith({ where: { isDraft: false } });
+    expect(db.technology.findMany).toHaveBeenCalledWith({
+      where: { isDraft: false },
+      orderBy: {
+        name: 'asc',
+      },
+    });
     expect(result).toEqual(mockPublicTechnologies);
   });
 
@@ -60,7 +69,12 @@ describe('Technology Fetch Functions', () => {
     await expect(fetchAllPublicTechnologies()).rejects.toThrow(
       'Failed to fetch public technologies.',
     );
-    expect(db.technology.findMany).toHaveBeenCalledWith({ where: { isDraft: false } });
+    expect(db.technology.findMany).toHaveBeenCalledWith({
+      where: { isDraft: false },
+      orderBy: {
+        name: 'asc',
+      },
+    });
   });
 
   it('should fetch a technology by ID successfully', async () => {
