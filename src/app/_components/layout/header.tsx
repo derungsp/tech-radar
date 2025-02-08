@@ -46,7 +46,7 @@ export default function Header() {
                 href={'/admin/technologies'}
                 className={clsx(
                   'hover:text-primary',
-                  pathname === '/admin/technologies'
+                  pathname.includes('/admin/technologies')
                     ? 'text-primary font-semibold'
                     : 'text-gray-900',
                 )}
@@ -69,7 +69,9 @@ export default function Header() {
 
           {user ? (
             <>
-              <p>Welcome {user ? user.firstname + ' ' + user.lastname : ''}</p>
+              <p>
+                Welcome {user ? user.firstname + ' ' + user.lastname : ''} ({user.role})
+              </p>
               <LogoutLink />
             </>
           ) : (
@@ -148,7 +150,7 @@ const MobileMenu = ({
                   href={'/admin/technologies'}
                   className={clsx(
                     'hover:text-primary',
-                    pathname === '/admin/technologies'
+                    pathname.includes('/admin/technologies')
                       ? 'text-primary font-semibold'
                       : 'text-gray-900',
                   )}

@@ -1,7 +1,8 @@
 {
   "name": "tech-radar",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
+  "author": "Pascal Derungs",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",

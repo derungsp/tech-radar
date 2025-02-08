@@ -14,13 +14,24 @@ const TechnologySchema = z.object({
   techDescription: z.string().nonempty(),
   ringDescription: z.string().nullable().optional(),
   ring: z.preprocess((val) => (val === '' ? null : val), z.nativeEnum(Ring).nullable().optional()),
-  category: z.preprocess((val) => (val === '' ? null : val), z.nativeEnum(TechnologyCategory)),
+  category: z.preprocess(
+    (val) => (val === '' ? null : val),
+    z.nativeEnum(TechnologyCategory).nullable(),
+  ),
   isDraft: booleanFromString,
 });
 
 const ConditionalTechnologySchema = TechnologySchema.omit({
   id: true,
 }).superRefine((data, ctx) => {
+  if (!data.category) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['category'],
+      message: 'Category is required.',
+    });
+  }
+
   if (!data.isDraft) {
     if (!data.ring) {
       ctx.addIssue({

@@ -47,7 +47,7 @@ export default function LogList({ logs }: { logs: Log[] }) {
                 <span className="flex-1 text-xs">{log.timestamp.toUTCString()}</span>
               </div>
             </AccordionTrigger>
-            <AccordionContent className="flex flex-col bg-neutral-50 p-2">
+            <AccordionContent className="my-5 flex flex-col p-2">
               <div className="flex items-center justify-between gap-8 text-xs font-semibold">
                 <span className="flex-1">Message</span>
                 <span className="flex-1">User</span>

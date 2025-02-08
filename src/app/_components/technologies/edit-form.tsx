@@ -200,7 +200,7 @@ export default function EditForm({ technology }: { technology: Technology }) {
           </Button>
 
           <Link
-            href={`/technologies`}
+            href={`/admin/technologies`}
             className="h-10 rounded-lg border bg-white px-4 py-2 text-neutral-950 shadow-sm hover:bg-neutral-900 hover:text-white focus-visible:outline-neutral-500 active:bg-neutral-600"
           >
             Cancel

@@ -97,6 +97,12 @@ Die Authentifizierung erfolgt mit **NextAuth**, wobei **Prisma** eine effiziente
 
 Zur Sicherstellung der Code-Qualität kommen ESLint, Prettier und Husky zum Einsatz. Diese Tools optimieren den Entwicklungsworkflow und verbessern die Code-Konsistenz. So ergibt sich ein modernen, skalierbarer Tech-Stack, der sowohl Performance als auch Sicherheit gewährleistet.
 
+# 4.1 Eigene Inputs
+
+Da es sich um ein Studentenprojekt handelt, wurden unterschiedliche Wege zur Lösung ausprobiert. So zum Beispiel bei den Formulare: Da eine clientseitige Validierung vom Browser oft langweilig aussieht, wurden mehrere Wege implementiert. Die öffentlichen Login/Register-Formulare werden client- und serverseitig Validiert. Auch zur Serverentlastung bei allfälligen Bots. Die geschützten (nur für authentifizierte User) Formulare zur Erstellung und Bearbeitung von Technologien wurden bewusst nur serverseitig validiert, um die andere Seite zu sehen.
+
+Revalidation von Next.js: Die entwickelte Applikation benutzt Server Side Rendering und ein intelligentes Caching. Das bringt das Thema der Aktualität der Daten auf, da diese nicht zwingend immer neu gefetched werden. Dies kann man steuern über das Revalidieren eines Pfades (z.B. revalidatePath('/')). Im Projekt wurde es bei den Default-Werten belassen.
+
 # 5. Bausteinschicht
 
 In diesem Kapitel wird genauer auf die entwickelten Komponenten der Webapplikation eigegangen.
@@ -146,14 +152,16 @@ Das Projekt wurde laufend und automatisch auf Vercel deployed. Vercel bietet die
 
 # 9. Risiken und technische Schulden
 
-| Titel                            | Typ         | Beschreibung                                                                                                                                                             |
-| -------------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Tech-Radar Überschneidungen      | Refactoring | Punkte im Tech-Radar werden zurzeit zufällig pro Ring gesetzt. D.h. die Punkte können sich überschneiden, was nicht schön ist.                                           |
-| Usermanagement                   | Feature     | Ein Usermanagement direkt auf der Website erleichtert das Erstellen und Bearbeiten von Benutzern. Zurzeit kann nur wie Registrierung ein neuer Employee erstellt werden. |
-| Mandatenfähigkeit                | Feature     | Ausweitung auf mehrere Mandate. Firmen können erstellt werden und Zugriffe bzw. Tech-Radars pro Firma.                                                                   |
-| Redundanzen entfernen            | Refactoring | An gewissen Stellen im Projekt, gibt es Komponenten, die redundant bzw. sehr ähnlich mehrfach vorkommen. Diese kann man in einem weiteren Schritt zusammenfassen.        |
-| Tooltip-Alternative für Mobile   | Feature     | Die Tooltip lassen sich natürlich nicht gut anzeigen auf einem Gerät mit Touchscreen. Eine Alternative wäre schön.                                                       |
-| Redundanz bei Rollenberechtigung | Refactoring | Die Rollenüberprüfung findet momentan in den gesicherten Komponenten redundant statt und bildet so ein Risiko, wenn man es einheitlich bearbeiten möchte.                |
+| Titel                                           | Typ         | Beschreibung                                                                                                                                                                                                |
+| ----------------------------------------------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Tech-Radar Überschneidungen                     | Refactoring | Punkte im Tech-Radar werden zurzeit zufällig pro Ring gesetzt. D.h. die Punkte können sich überschneiden, was nicht schön ist.                                                                              |
+| Usermanagement (Optionaler Teil der Aufgabe)    | Feature     | Ein Usermanagement direkt auf der Website erleichtert das Erstellen und Bearbeiten von Benutzern. Zurzeit kann nur wie Registrierung ein neuer Employee erstellt werden.                                    |
+| Mandatenfähigkeit (Optionaler Teil der Aufgabe) | Feature     | Ausweitung auf mehrere Mandate. Firmen können erstellt werden und Zugriffe bzw. Tech-Radars pro Firma.                                                                                                      |
+| Redundanzen entfernen                           | Refactoring | An gewissen Stellen im Projekt, gibt es Komponenten, die redundant bzw. sehr ähnlich mehrfach vorkommen. Diese kann man in einem weiteren Schritt zusammenfassen.                                           |
+| Tooltip-Alternative für Mobile                  | Feature     | Die Tooltip lassen sich natürlich nicht gut anzeigen auf einem Gerät mit Touchscreen. Eine Alternative wäre schön.                                                                                          |
+| Redundanz bei Rollenberechtigung                | Refactoring | Die Rollenüberprüfung findet momentan in den gesicherten Komponenten redundant statt und bildet so ein Risiko, wenn man es einheitlich bearbeiten möchte.                                                   |
+| Doppeltes User login log                        | Refactoring | Wenn sich ein user neu registriert, wird zurzeit das Login zweimal verbucht. Einmal für den Registrierungsprozess und einmal für den Loginprozess. Dies könnte man noch schön auftrennen und spezifizieren. |
+| Daten begrenzen                                 | Refactoring | Zurzeit werden jeweils alle Daten geladen (Technologien, Logs). In einem späteren Schritt müsste/könnte man die Daten auf ein Limit beschränken und eventuell eine Pagination für die Logs einbauen.        |
 
 # 10. Fazit & Reflexion
 
@@ -174,7 +182,8 @@ Es war eine Challenge für mich, den Tech-Radar schön visuell anzuzeigen und ic
 | 05.02.2025        | 10          | Tech-Radar, Technology-Schema, CRUD-Funktionalitäten, Refactoring | Eine erste Version der Tech-Radars wurde entwickelt (Testdaten). Technologien werden auf der Übersichtsseite rollenbasiert angezeigt. Ausserdem können Technologien auf einer seperaten Seite erstellt und abgespeichert werden. Es wurde ein spezieller Select für die Enum's für den Ring und die Kategorie entwickelt. Dazu wurde headlessui eingebunden. Ganzes Projekt wurde überarbeitet und das Editieren sowie das Erstellen von Technologien fertiggestellt. Der Tech-Radar wurden mit Farben und konsistenter Legende verbessert. |
 | 06.02.2025        | 7.5         | Abschluss aller Anforderungen, Refactorings, Doku                 | Alle Anforderungen wurden abgeschlossen. Diagramme des Projekts für die Doku erstellt und die ersten Teile geschrieben. Logger entwickelt, der alle Anmeldungen loggt und durch Tech-Leads und CTOs eingesehen werden kann. Design wurde grundlegend überarbeitet und responsive gemacht. Der Tech-Radar wurde verschönert und mit einer Liste und Tooltips versehen. RadixUI wurde eingebunden, um ein spezielles Accardion anzuzeigen (sah ich irgendwo mal als Idee).                                                                    |
 | 07.02.2025        | 4.5         | Testing, GitHub CI, Refactorings, Dokumentation                   | Es wurde Jest eingebunden für das Testing der Backendlogik und die entsprechenden Tests erstellt. Es werden alle Methoden der Actions und Data Calls getestet und eine Codeabdeckungs-Prüfung gemacht. Ausserdem wurde eine GitHub CI erstellt, die den ESLint und alle Tests durchführt. Zum Schluss wurden noch grossflächig Refactorings am Design vorgenommen, damit alles auf jeden Bildschirmgrössen gut aussieht. Dokumentation wurde noch ergänzt.                                                                                  |
-| **Total Aufwand** | 39          |                                                                   |
+| 08.02.2025        | 2           | User-Testing, Dokumentation, Abschluss                            | Es wurde ein manuelles Testing direkt auf der Website gemacht. Kleine Designänderungen wurden vorgenommen und das Projekt wurde für die Abgabe vorbereitet.                                                                                                                                                                                                                                                                                                                                                                                 |
+| **Total Aufwand** | **41**      |                                                                   |
 
 # Getting Started für die lokale Entwicklung
 

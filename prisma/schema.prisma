@@ -51,7 +51,7 @@ model Technology {
   ringDescription String?
   isDraft         Boolean   @default(false)
 
-  category TechnologyCategory
+  category TechnologyCategory?
   ring     Ring?
 
   @@map("technologies")
